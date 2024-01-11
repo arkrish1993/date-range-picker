@@ -1,0 +1,16 @@
+.date-range-container {
+  display: flex;
+
+  .date-range-start {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    margin-right: 10px;
+  }
+
+  .date-range-end {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+  }
+}
