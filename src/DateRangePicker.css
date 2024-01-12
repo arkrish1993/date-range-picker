@@ -9,15 +9,30 @@
   .date-range-container {
     display: flex;
 
-    ::-webkit-datetime-edit {
-      padding: 0.5em;
-      color: #2e2e2e;
-      border: none;
+    input[type="date"]::-webkit-clear-button {
+      display: none;
     }
 
-    ::-webkit-datetime-edit-text {
+    input[type="date"]::-webkit-inner-spin-button {
+      display: none;
+    }
+
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      color: #2c3e50;
+    }
+
+    input[type="date"] {
+      appearance: none;
+      -webkit-appearance: none;
       color: #2e2e2e;
-      padding: 0 0.3em;
+      font-family: Verdana, sans-serif;
+      font-size: 18px;
+      border: 1px solid rgb(240, 240, 240);
+      border-radius: 10px;
+      background: rgb(240, 240, 240);
+      padding: 5px;
+      display: inline-block !important;
+      visibility: visible !important;
     }
 
     .date-range-start,

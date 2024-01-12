@@ -3,24 +3,30 @@ import {
   getCommaSeparatedData,
   getSelectedRange,
   getWeekends,
+  validateDateRange,
 } from "./utils/DateRangeUtils";
 import "./DateRangePicker.css";
 
-const DateRangePicker = () => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+const DateRangePicker = ({ title, predefinedRange }) => {
+  const [startDate, setStartDate] = useState(
+    !!predefinedRange && !!predefinedRange.startDate
+      ? predefinedRange.startDate
+      : ""
+  );
+  const [endDate, setEndDate] = useState(
+    !!predefinedRange && !!predefinedRange.endDate
+      ? predefinedRange.endDate
+      : ""
+  );
   const [errorMessage, setErrorMessage] = useState("");
   const [isInvalid, setIsInvalid] = useState(false);
   const endDateRef = useRef(null);
 
   useEffect(() => {
     if (!!startDate && !!endDate) {
-      setIsInvalid(startDate >= endDate);
-      if (startDate > endDate) {
-        setErrorMessage("Start date cannot be before the end date.");
-      } else if (startDate === endDate) {
-        setErrorMessage("Please choose a range.");
-      }
+      const error = validateDateRange(startDate, endDate);
+      setIsInvalid(!!error);
+      setErrorMessage(error);
     }
   }, [startDate, endDate]);
 
@@ -40,7 +46,7 @@ const DateRangePicker = () => {
 
   return (
     <div className="main-container">
-      <h3>Date Range Picker</h3>
+      <h3>{title ? title : "Date Range Picker"}</h3>
       <div className="date-range-container">
         {/* Start date picker */}
         <div className="date-range-start">
@@ -50,7 +56,6 @@ const DateRangePicker = () => {
             id="startDate"
             onChange={(e) => {
               setStartDate(e.target.value);
-              endDateRef.current.showPicker();
             }}
             value={startDate}
           />
