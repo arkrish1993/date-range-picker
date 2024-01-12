@@ -5,7 +5,7 @@ import {
   getWeekends,
   validateDateRange,
 } from "./utils/DateRangeUtils";
-import "./DateRangePicker.css";
+import "./css/DateRangePicker.css";
 
 const DateRangePicker = ({ title, predefinedRange }) => {
   const [startDate, setStartDate] = useState(
