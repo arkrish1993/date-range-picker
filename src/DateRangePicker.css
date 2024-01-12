@@ -1,16 +1,52 @@
-.date-range-container {
-  display: flex;
+.main-container {
+  font-family: Verdana, sans-serif;
+  background-color: #2e2e2e;
+  color: lightgray;
+  padding: 0.15em 1em 0.5em 1em;
+  border-radius: 10px;
+  width: fit-content;
 
-  .date-range-start {
+  .date-range-container {
     display: flex;
-    flex-direction: column;
-    width: fit-content;
-    margin-right: 10px;
+
+    ::-webkit-datetime-edit {
+      padding: 0.5em;
+      color: #2e2e2e;
+      border: none;
+    }
+
+    ::-webkit-datetime-edit-text {
+      color: #2e2e2e;
+      padding: 0 0.3em;
+    }
+
+    .date-range-start,
+    .date-range-end {
+      display: flex;
+      flex-direction: column;
+      width: fit-content;
+      margin-right: 1em;
+      margin-bottom: 1em;
+      label {
+        margin-bottom: 0.5em;
+      }
+    }
   }
 
-  .date-range-end {
-    display: flex;
-    flex-direction: column;
-    width: fit-content;
+  .date-range-error {
+    color: rgb(255, 175, 175);
+    font-style: italic;
+    font-size: 0.75em;
+    margin-bottom: 0.5em;
+  }
+
+  .date-range-display-container {
+    border: 0.1em solid rgb(240, 240, 240);
+    background-color: rgb(240, 240, 240);
+    color: #2e2e2e;
+    width: 20em;
+    padding: 0.5em;
+    border-radius: 10px;
+    margin-bottom: 1em;
   }
 }

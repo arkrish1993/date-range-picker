@@ -1,78 +1,67 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  getCommaSeparatedData,
+  getSelectedRange,
+  getWeekends,
+} from "./utils/DateRangeUtils";
 import "./DateRangePicker.css";
 
-/**
- * @name getFormattedDate
- * @description This function takes a date and returns it in yyyy-mm-dd format.
- */
-const getFormattedDate = (date) => {
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const year = date.getFullYear();
-  return `${year}-${month >= 10 ? month : "0" + month}-${
-    day >= 10 ? day : "0" + day
-  }`;
-};
-
 const DateRangePicker = () => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [isInvalid, setIsInvalid] = useState(false);
+  const endDateRef = useRef(null);
 
   useEffect(() => {
     if (!!startDate && !!endDate) {
-      setIsInvalid(startDate > endDate);
+      setIsInvalid(startDate >= endDate);
+      if (startDate > endDate) {
+        setErrorMessage("Start date cannot be before the end date.");
+      } else if (startDate === endDate) {
+        setErrorMessage("Please choose a range.");
+      }
     }
   }, [startDate, endDate]);
 
   /**
-   * @name getSelectedRange
-   * @description This function returns the selected range in a specified format.
+   * @name getValues
+   * @description This function returns an array with the following data:
+   * 1. The selected range.
+   * 2. The weekends within the selected date range.
    */
-  const getSelectedRange = () => {
-    return JSON.stringify([startDate, endDate]);
+  const getValues = () => {
+    const range = getSelectedRange(startDate, endDate);
+    const weekends = getWeekends(startDate, endDate);
+    return [range, weekends];
   };
 
-  /**
-   * @name getWeekends
-   * @description This function returns the weekends within the selected date range.
-   */
-  const getWeekends = () => {
-    const weekends = [];
-    let currentDate = new Date(startDate);
-
-    while (currentDate <= new Date(endDate)) {
-      const day = currentDate.getDay();
-      if (day === 0 || day === 6) {
-        weekends.push(getFormattedDate(currentDate));
-      }
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-
-    return JSON.stringify(weekends);
-  };
+  const [range, weekends] = getValues();
 
   return (
-    <div>
+    <div className="main-container">
+      <h3>Date Range Picker</h3>
       <div className="date-range-container">
         {/* Start date picker */}
         <div className="date-range-start">
-          <label htmlFor="startDate">Start Date:</label>
+          <label htmlFor="startDate">Start Date</label>
           <input
             type="date"
             id="startDate"
             onChange={(e) => {
               setStartDate(e.target.value);
+              endDateRef.current.showPicker();
             }}
             value={startDate}
           />
         </div>
         {/* End date picker */}
         <div className="date-range-end">
-          <label htmlFor="endDate">End Date:</label>
+          <label htmlFor="endDate">End Date</label>
           <input
             type="date"
             id="endDate"
+            ref={endDateRef}
             onChange={(e) => {
               setEndDate(e.target.value);
             }}
@@ -80,15 +69,26 @@ const DateRangePicker = () => {
           />
         </div>
       </div>
+
       {/* Display section */}
       {!!startDate && !!endDate && isInvalid ? (
-        <div>Start date cannot be before the end date.</div>
+        <div className="date-range-error">{errorMessage}</div>
       ) : null}
       {!!startDate && !!endDate && !isInvalid ? (
-        <div>Selected date range values: {getSelectedRange()}</div>
+        <div>
+          <span>Selected date range values: </span>
+          <div className="date-range-display-container">
+            {getCommaSeparatedData(range)}
+          </div>
+        </div>
       ) : null}
       {!!startDate && !!endDate && !isInvalid ? (
-        <div>Weekends within the selected date range: {getWeekends()}</div>
+        <div>
+          <span>Weekends within the selected date range: </span>
+          <div className="date-range-display-container">
+            {getCommaSeparatedData(weekends)}
+          </div>
+        </div>
       ) : null}
     </div>
   );
